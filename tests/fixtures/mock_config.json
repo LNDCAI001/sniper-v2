@@ -1,0 +1,45 @@
+{
+  "name": "LLM Hardware",
+  "description": "Strix Halo mini-PCs, Mac Studio/Pro, high-memory MacBooks, handhelds",
+  "search_terms": [
+    "맥스튜디오 128",
+    "맥북프로 128"
+  ],
+  "price_thresholds": {
+    "mac_studio_max": 5000000,
+    "mac_studio_steal": 3500000,
+    "macbook_max": 4000000,
+    "macbook_steal": 2800000,
+    "minipc_max": 1500000,
+    "minipc_steal": 1000000,
+    "handheld_max": 2000000,
+    "handheld_steal": 1200000,
+    "suspicious_min": 500000
+  },
+  "anti_fraud": {
+    "min_seller_age_days": 30,
+    "suspicious_price_ratio": 0.4,
+    "stock_photo_domains": [
+      "apple.com",
+      "prod.danawa.com",
+      "cdn.shopify.com",
+      "shopify.com",
+      "gmktec.com",
+      "beelink.com",
+      "minisforum.com",
+      "ayaneo.com",
+      "gpd.hk",
+      "onexfly.com"
+    ],
+    "known_stock_photo_patterns": [
+      "product[-_]?image",
+      "official[-_]?photo",
+      "press[-_]?kit",
+      "render[-_]?final"
+    ]
+  },
+  "output_file": "/tmp/sniper_alerts.md",
+  "log_file": "/tmp/sniper.log",
+  "state_file": "/tmp/sniper_state.json",
+  "title_price_fallback": true
+}

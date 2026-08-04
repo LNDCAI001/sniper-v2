@@ -1,0 +1,18 @@
+{
+  "seen_ids": [
+    "daangn:daangn-100",
+    "joonggonara:228000000",
+    "joonggonara:form?type=regist"
+  ],
+  "last_run": "2026-08-02 10:00:00 KST",
+  "total_alerts": 7,
+  "alert_history": [
+    {
+      "time": "2026-08-02 09:00:00 KST",
+      "tier": "STEAL",
+      "market": "daangn",
+      "id": "daangn-100",
+      "title": "맥스튜디오 M2 울트라"
+    }
+  ]
+}
