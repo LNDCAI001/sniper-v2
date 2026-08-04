@@ -30,6 +30,7 @@ class VerificationResult:
     in_stock: bool
     status: str
     condition: str
+    condition_grade: str = ""
     warranty: bool
     defects: list[str]
     model_match_score: float
@@ -87,7 +88,20 @@ _SCAM_RED_FLAGS = [
     "급매", "급처", "빨리", "서두르세요", "마감임박",
     "다른사람도", "경쟁자", "선입금", "미리입금",
     "외부링크", "카카오톡", "텔레그램",
+    # Payment bypass / direct-transfer scams
+    "계좌이체", "카카오페이만", "안전결제 싫", "번개페이 말고",
+    "직접 송금", "먼저 입금", "선입금", "보내주면",
+    # Mining repack / suspicious condition bypass
+    "채굴", "채굴용", "채굴했어요", "채굴했으나", "채굴이력",
+    "박스만", "박스만있어요", "박스만 있습니다",
 ]
+
+_CONDITION_GRADE_KEYWORDS = {
+    "S급": "S", "A급": "A", "B급": "B", "C급": "C",
+    "상급": "A", "중급": "B", "하급": "C",
+    "상": "A", "중": "B", "하": "C",
+    "최상": "S", "상태상": "A", "상태중": "B", "상태하": "C",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -115,6 +129,14 @@ def _status_from_text(text: str) -> str:
     if any(k in t for k in ("for sale", "판매중", "selling", "available", "in stock")):
         return "for-sale"
     return "unknown"
+
+
+def _extract_condition_grade(blob: str) -> str:
+    lowered = blob.lower()
+    for keyword, grade in _CONDITION_GRADE_KEYWORDS.items():
+        if keyword.lower() in lowered:
+            return grade
+    return ""
 
 
 # ---------------------------------------------------------------------------
@@ -198,6 +220,9 @@ class ListingVerifier:
         elif _contains_any(blob, ("중고", "used")):
             condition = "used"
 
+        # 2b. Condition grade
+        condition_grade = _extract_condition_grade(blob)
+
         # 3. Warranty
         if _contains_any(blob, _WARRANTY_KEYWORDS):
             warranty = True
@@ -230,6 +255,7 @@ class ListingVerifier:
             in_stock=in_stock,
             status=status or _status_from_text(blob),
             condition=condition,
+            condition_grade=condition_grade,
             warranty=warranty,
             defects=defects,
             model_match_score=model_match_score,

@@ -236,6 +236,12 @@ class SniperScanner:
             if self.state.is_seen(platform, lid):
                 continue
 
+            # Block obviously stale/reserved status early
+            title_or_name = listing_dict.get("title") or listing_dict.get("name") or ""
+            if _is_sold_or_reserved_status(title_or_name, listing_dict.get("status", "")):
+                logger.debug("Filtered out %s: sold/reserved status", lid)
+                continue
+
             vresult = verify_listing(
                 listing_dict,
                 anti_fraud=self.cfg.anti_fraud.dict(),
@@ -391,6 +397,26 @@ class SniperScanner:
 def _now_iso() -> str:
     from datetime import datetime, timezone
     return datetime.now(timezone.utc).isoformat()
+
+
+_SOLD_STATUS_HINTS = (
+    "sold",
+    "soldout",
+    "거래완료",
+    "판매완료",
+    "예약중",
+    "예약완료",
+    "품절",
+    "매진",
+    "예약가능",
+    "reserved",
+    "out of stock",
+)
+
+
+def _is_sold_or_reserved_status(title: str, status: str) -> bool:
+    blob = f"{status} {title}".lower()
+    return any(hint in blob for hint in _SOLD_STATUS_HINTS)
 
 
 def _build_yongsanbit_baselines(yongsanbit_listings: list[dict[str, Any]]) -> list[Any]:
