@@ -30,7 +30,7 @@ class VerificationResult:
     in_stock: bool
     status: str
     condition: str
-    condition_grade: str = ""
+    condition_grade: str
     warranty: bool
     defects: list[str]
     model_match_score: float
@@ -182,6 +182,7 @@ class ListingVerifier:
                 in_stock=False,
                 status="sold",
                 condition="unknown",
+                condition_grade="",
                 warranty=False,
                 defects=[],
                 model_match_score=0.0,
